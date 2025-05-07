@@ -74,4 +74,27 @@ document.getElementById("urlSubmit").addEventListener("click", async () => {
         urlResponse.innerText = "An error occurred while contacting the server.";
     }
 });
+document.getElementById('uploadBtn').addEventListener('click', function () {
+    const fileInput = document.getElementById('fileInput');
+    if (!fileInput.files.length) {
+        alert('Please select a file first!');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', fileInput.files[0]);
+
+    fetch('https://i-hybrid-chatbot-backend.onrender.com/upload', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('uploadStatus').innerText = data.status || data.error;
+    })
+    .catch(error => {
+        console.error('Upload error:', error);
+        document.getElementById('uploadStatus').innerText = 'Upload failed.';
+    });
+});
 
