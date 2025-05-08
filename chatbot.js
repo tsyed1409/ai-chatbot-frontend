@@ -6,18 +6,24 @@ document.addEventListener("DOMContentLoaded", () => {
     const chatInput = document.getElementById("chat-input");
     const chatMessages = document.getElementById("chat-messages");
     const crawlUrlInputInChat = document.getElementById("crawlUrlInputInChat");
+    const fileInputInChat = document.getElementById("fileInputInChat");
+    const uploadBtnInChat = document.getElementById("uploadBtnInChat");
+    const uploadStatusInChat = document.getElementById("uploadStatusInChat");
+
     let documentsUploaded = false;  // ✅ Track if docs are uploaded
 
+    // Open chat box
     chatButton.addEventListener("click", () => {
         chatBox.classList.remove("hidden");
         chatInput.focus();
     });
 
+    // Close chat box
     closeChat.addEventListener("click", () => {
         chatBox.classList.add("hidden");
     });
 
-    // ✅ Send Button Logic (updated)
+    // ✅ Send chat message
     sendButton.addEventListener("click", async () => {
         const message = chatInput.value.trim();
         const crawlUrl = crawlUrlInputInChat.value.trim();
@@ -32,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
             let body;
 
             if (crawlUrl) {
-                // ✅ Crawl mode: send to /crawl-and-chat
+                // ✅ Crawl mode
                 endpoint = "https://i-hybrid-chatbot-backend.onrender.com/crawl-and-chat";
                 body = JSON.stringify({ url: crawlUrl, message: message });
             } else if (documentsUploaded) {
@@ -53,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const data = await response.json();
             const lastBotMsg = chatMessages.querySelector(".bot:last-child");
-            if (lastBotMsg) lastBotMsg.textContent = data.response;
+            if (lastBotMsg) lastBotMsg.textContent = data.response || data.error || "No response.";
         } catch (error) {
             console.error("Error:", error);
             appendMessage("bot", "Sorry, something went wrong.");
@@ -68,44 +74,17 @@ document.addEventListener("DOMContentLoaded", () => {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    // ✅ Website Chat (no changes)
-    document.getElementById("urlSubmit").addEventListener("click", async () => {
-        const url = document.getElementById("urlInput").value.trim();
-        const question = document.getElementById("urlQuestionInput").value.trim();
-        const urlResponse = document.getElementById("urlResponse");
-
-        if (!url || !question) {
-            urlResponse.innerText = "Please enter both a URL and a question.";
-            return;
-        }
-
-        urlResponse.innerText = "Thinking...";
-
-        try {
-            const response = await fetch("https://i-hybrid-chatbot-backend.onrender.com/chat-with-url", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ url, message: question }),
-            });
-
-            const data = await response.json();
-            urlResponse.innerText = data.response || data.error || "No response.";
-        } catch (error) {
-            console.error("Error:", error);
-            urlResponse.innerText = "An error occurred while contacting the server.";
-        }
-    });
-
-    // ✅ Upload Document (sets documentsUploaded = true)
-    document.getElementById('uploadBtn').addEventListener('click', function () {
-        const fileInput = document.getElementById('fileInput');
-        if (!fileInput.files.length) {
+    // ✅ Upload Document inside chat widget
+    uploadBtnInChat.addEventListener("click", () => {
+        if (!fileInputInChat.files.length) {
             alert('Please select a file first!');
             return;
         }
 
         const formData = new FormData();
-        formData.append('file', fileInput.files[0]);
+        formData.append('file', fileInputInChat.files[0]);
+
+        uploadStatusInChat.textContent = "Uploading...";
 
         fetch('https://i-hybrid-chatbot-backend.onrender.com/upload', {
             method: 'POST',
@@ -113,14 +92,14 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .then(response => response.json())
         .then(data => {
-            document.getElementById('uploadStatus').innerText = data.status || data.error;
+            uploadStatusInChat.textContent = data.status || data.error;
             if (data.status) {
-                documentsUploaded = true;  // ✅ Set flag when upload is successful
+                documentsUploaded = true;  // ✅ Mark as uploaded
             }
         })
         .catch(error => {
             console.error('Upload error:', error);
-            document.getElementById('uploadStatus').innerText = 'Upload failed.';
+            uploadStatusInChat.textContent = 'Upload failed.';
         });
     });
 });

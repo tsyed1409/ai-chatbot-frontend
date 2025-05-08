@@ -8,45 +8,35 @@
 </head>
 <body>
   <h1>Welcome to My Website</h1>
-  <p>This site has an AI assistant in the corner. Ask anything!</p>
+  <p>The AI assistant is available in the bottom-right corner. You can chat, upload documents, and even crawl websites—all inside the chat widget.</p>
 
-<!-- ✅ Chat Button (floating icon) -->
-<div id="chat-button">💬</div>
+  <!-- ✅ Chat Button (floating icon) -->
+  <div id="chat-button">💬</div>
 
-
-  <!-- Chatbot Widget -->
+  <!-- ✅ Chatbot Widget -->
   <div id="chat-box" class="hidden">
     <div id="chat-header">AI Assistant <span id="close-chat">×</span></div>
-    
-    <!-- ✅ NEW: Optional Crawl URL -->
+
+    <!-- ✅ Optional Crawl URL -->
     <input type="text" id="crawlUrlInputInChat" placeholder="(Optional) Enter URL to crawl" style="width: 100%; margin-bottom: 10px;">
 
+    <!-- ✅ Chat Messages -->
     <div id="chat-messages"></div>
+
+    <!-- ✅ Chat Input -->
     <textarea id="chat-input" placeholder="Ask me anything..."></textarea>
     <button id="send-button">Send</button>
-</div>
 
+    <!-- ✅ Divider -->
+    <hr style="margin: 10px 0;">
 
-  <!-- New Section: Ask About a Website -->
-  <hr>
-  <h3>Ask About a Website</h3>
-  <label for="urlInput">Website URL:</label>
-  <input type="text" id="urlInput" placeholder="https://example.com" style="width: 100%; margin-bottom: 10px;">
-
-  <label for="urlQuestionInput">Your Question:</label>
-  <input type="text" id="urlQuestionInput" placeholder="What is this page about?" style="width: 100%; margin-bottom: 10px;">
-
-  <button id="urlSubmit">Ask About Website</button>
-  <div id="urlResponse" style="margin-top: 10px; font-weight: bold;"></div>
-
-  <!-- ✅ Upload Document Section -->
-  <hr>
-  <h3>Upload Document</h3>
-  <input type="file" id="fileInput">
-  <button id="uploadBtn">Upload and Ingest</button>
-  <div id="uploadStatus"></div>
+    <!-- ✅ Upload Document -->
+    <label for="fileInputInChat"><strong>Upload Document:</strong></label>
+    <input type="file" id="fileInputInChat" style="width: 100%; margin-bottom: 10px;">
+    <button id="uploadBtnInChat" style="width: 100%; margin-bottom: 10px;">Upload and Ingest</button>
+    <div id="uploadStatusInChat" style="font-size: 0.9em; color: green;"></div>
+  </div>
 
   <script src="chatbot.js"></script>
 </body>
 </html>
-
