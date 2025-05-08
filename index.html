@@ -11,13 +11,17 @@
   <p>This site has an AI assistant in the corner. Ask anything!</p>
 
   <!-- Chatbot Widget -->
-  <div id="chat-button">💬</div>
   <div id="chat-box" class="hidden">
     <div id="chat-header">AI Assistant <span id="close-chat">×</span></div>
+    
+    <!-- ✅ NEW: Optional Crawl URL -->
+    <input type="text" id="crawlUrlInputInChat" placeholder="(Optional) Enter URL to crawl" style="width: 100%; margin-bottom: 10px;">
+
     <div id="chat-messages"></div>
     <textarea id="chat-input" placeholder="Ask me anything..."></textarea>
     <button id="send-button">Send</button>
-  </div>
+</div>
+
 
   <!-- New Section: Ask About a Website -->
   <hr>

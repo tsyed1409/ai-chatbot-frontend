@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const sendButton = document.getElementById("send-button");
     const chatInput = document.getElementById("chat-input");
     const chatMessages = document.getElementById("chat-messages");
+    const crawlUrlInputInChat = document.getElementById("crawlUrlInputInChat");
     let documentsUploaded = false;  // ✅ Track if docs are uploaded
 
     chatButton.addEventListener("click", () => {
@@ -16,8 +17,10 @@ document.addEventListener("DOMContentLoaded", () => {
         chatBox.classList.add("hidden");
     });
 
+    // ✅ Send Button Logic (updated)
     sendButton.addEventListener("click", async () => {
         const message = chatInput.value.trim();
+        const crawlUrl = crawlUrlInputInChat.value.trim();
         if (!message) return;
 
         appendMessage("user", message);
@@ -25,13 +28,22 @@ document.addEventListener("DOMContentLoaded", () => {
         appendMessage("bot", "...");
 
         try {
-            const endpoint = documentsUploaded
-                ? "https://i-hybrid-chatbot-backend.onrender.com/query-documents"
-                : "https://i-hybrid-chatbot-backend.onrender.com/chat";
+            let endpoint;
+            let body;
 
-            const body = documentsUploaded
-                ? JSON.stringify({ question: message })
-                : JSON.stringify({ message });
+            if (crawlUrl) {
+                // ✅ Crawl mode: send to /crawl-and-chat
+                endpoint = "https://i-hybrid-chatbot-backend.onrender.com/crawl-and-chat";
+                body = JSON.stringify({ url: crawlUrl, message: message });
+            } else if (documentsUploaded) {
+                // ✅ Query uploaded documents
+                endpoint = "https://i-hybrid-chatbot-backend.onrender.com/query-documents";
+                body = JSON.stringify({ question: message });
+            } else {
+                // ✅ General chat
+                endpoint = "https://i-hybrid-chatbot-backend.onrender.com/chat";
+                body = JSON.stringify({ message: message });
+            }
 
             const response = await fetch(endpoint, {
                 method: "POST",
